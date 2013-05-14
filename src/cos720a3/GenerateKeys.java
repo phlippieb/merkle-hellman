@@ -2,7 +2,7 @@ package cos720a3;
 
 import java.util.ArrayList;
 
-public class KeyGenerator {
+public class GenerateKeys {
 
     /**
      * Generates a private and public key as text files.

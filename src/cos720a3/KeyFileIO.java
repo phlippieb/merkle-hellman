@@ -1,7 +1,9 @@
 package cos720a3;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -19,12 +21,7 @@ public class KeyFileIO {
      * @throws IOException
      */
     public static void writePublicKeyToFilename(PublicKey k, String filename) throws IOException {
-        BufferedWriter w = new BufferedWriter (new FileWriter (new File (filename)));
-        for (int i = 0; i < k.knapsack.size(); i++) {
-            w.write(new Integer(k.knapsack.get(i)).toString() + " ");
-        }
-        w.write(new Integer(k.q).toString() + " " + new Integer(k.r).toString());
-        w.close();
+        writePublicKeyToFile(k, new File (filename));
     }
 
     /**
@@ -51,11 +48,7 @@ public class KeyFileIO {
      * @throws IOException
      */
     public static void writePrivateKeyToFilename(PrivateKey k, String filename) throws IOException{
-        BufferedWriter w = new BufferedWriter (new FileWriter (new File (filename)));
-        for (int i = 0; i < k.knapsack.size(); i++) {
-            w.write(new Integer(k.knapsack.get(i)).toString() + " ");
-        }
-        w.close();
+        writePrivateKeyToFile(k, new File (filename));
     }
 
     /**
@@ -71,6 +64,41 @@ public class KeyFileIO {
             w.write(new Integer(k.knapsack.get(i)).toString() + " ");
         }
         w.close();
+    }
+
+    public static PublicKey readPublicKeyFromFilename(String filename) throws IOException {
+        return readPublicKeyFromFile(new File(filename));
+    }
+
+    public static PublicKey readPublicKeyFromFile(File file) throws IOException {
+        BufferedReader r = new BufferedReader (new FileReader (file));
+        String[] key = r.readLine().split(" ");
+        PublicKey publicKey = new PublicKey();
+        int i;
+        for (i = 0; i < key.length -2; i++) {
+            publicKey.knapsack.add(Integer.parseInt(key[i]));
+        }
+        publicKey.q = Integer.parseInt(key[i++]);
+        publicKey.r = Integer.parseInt(key[i]);
+
+        return publicKey;
+
+    }
+
+    public static PrivateKey readPrivateKeyFromFilename(String filename) throws IOException {
+        return readPrivateKeyFromFile(new File (filename));
+    }
+
+    public static PrivateKey readPrivateKeyFromFile(File file) throws IOException {
+        BufferedReader r = new BufferedReader (new FileReader (file));
+        String[] key = r.readLine().split(" ");
+        PrivateKey privateKey = new PrivateKey();
+        int i;
+        for (i = 0; i < key.length; i++) {
+            privateKey.knapsack.add(Integer.parseInt(key[i]));
+        }
+
+        return privateKey;
     }
 
 

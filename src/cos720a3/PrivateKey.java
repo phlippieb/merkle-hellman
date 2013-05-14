@@ -9,4 +9,21 @@ import java.util.ArrayList;
  */
 public class PrivateKey {
     public ArrayList<Integer> knapsack;
+
+    public PrivateKey() {
+        this.knapsack = new ArrayList<Integer>();
+    }
+
+    @Override
+    public String toString() {
+        if (knapsack.isEmpty()) {
+            return "";
+        }
+        StringBuilder sb = new StringBuilder ();
+        for (int i = 0; i < knapsack.size()-1; i++) {
+            sb.append(knapsack.get(i).toString() + " ");
+        }
+        sb.append(knapsack.get(knapsack.size()-1));
+        return sb.toString();
+    }
 }

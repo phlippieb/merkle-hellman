@@ -29,13 +29,22 @@ public class KeyGenerator {
         // generate keys
 
         PublicKey publicKey = generatePublicKey(knapsackSize);
+        System.out.println("public key:  "+publicKey);
         PrivateKey privateKey = publicKey.derivePrivateKey();
+        System.out.println("private key: "+privateKey);
 
 
         /////////////////////
         //write keys to files
         KeyFileIO.writePublicKeyToFilename(publicKey, publicKeyFileName);
         KeyFileIO.writePrivateKeyToFilename(privateKey, privateKeyFileName);
+
+        //////////////////
+        //test key reading
+        PublicKey testP = KeyFileIO.readPublicKeyFromFilename(publicKeyFileName);
+        System.out.println("test public key read: " + testP);
+        PrivateKey testPr = KeyFileIO.readPrivateKeyFromFilename(privateKeyFileName);
+        System.out.println("test private key read: " + testPr);
 
     }
 

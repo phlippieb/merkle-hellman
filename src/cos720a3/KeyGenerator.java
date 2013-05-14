@@ -66,7 +66,7 @@ public class KeyGenerator {
         do {
             max += 10;
             randomNumber = (int)(Math.random()*max);
-        } while (getGCD(randomNumber, q) != 1);
+        } while (Util.gcd(randomNumber, q) != 1);
         r = randomNumber;
         System.out.println(r + "]");
 
@@ -87,13 +87,6 @@ public class KeyGenerator {
         KeyFileIO.writePublicKeyToFilename(publicKnapsack, q, r, publicKeyFileName);
         KeyFileIO.writePrivateKeyToFilename(privateKnapsack, privateKeyFileName);
 
-    }
-
-    static int getGCD(int x, int y) {
-        BigInteger b1 = new BigInteger(Integer.toString(x));
-        BigInteger b2 = new BigInteger(Integer.toString(y));
-        BigInteger gcd = b1.gcd(b2);
-        return gcd.intValue();
     }
 
     static double arrayListTotal (ArrayList<Integer> array) {

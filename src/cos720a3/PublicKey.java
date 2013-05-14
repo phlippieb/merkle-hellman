@@ -13,6 +13,10 @@ public class PublicKey {
     public ArrayList<Integer> knapsack;
     public Integer q, r;
 
+    public PublicKey () {
+        this.knapsack = new ArrayList<Integer>();
+    }
+
     /**
      * Returns true if the key is a valid Merkle-Hellman public key. This is the case if:
      * *    The knapsack is super-increasing; i.e. each item is larger than the sum of all previous items
@@ -54,7 +58,6 @@ public class PublicKey {
 
         for (int i = 0; i < knapsack.size(); i++) {
             privateKey.knapsack.add(r * knapsack.get(i) % q);
-            System.out.print (privateKey.knapsack.get(i) + " ");
         }
 
         return privateKey;

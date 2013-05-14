@@ -7,6 +7,7 @@ import java.util.ArrayList;
  * @author phlippie
  */
 public class Encryption {
+    
     public static Integer [] encryptTextStringAsNumbers (String plaintext, PublicKey key) {
         String bPlaintext = Util.stringToBinaryString(plaintext);
         Integer [] result;

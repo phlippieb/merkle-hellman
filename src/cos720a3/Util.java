@@ -1,6 +1,11 @@
 package cos720a3;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.math.BigInteger;
+import java.util.Scanner;
 
 public class Util {
     public static int gcd(int x, int y) {
@@ -34,6 +39,16 @@ public class Util {
             sb.append ((new Character((char)charCodes[i])).toString());
         }
         return sb.toString();
+    }
+
+    public static String readFile (String filename) throws IOException {
+        return new Scanner(new File(filename)).useDelimiter("\\Z").next();
+    }
+
+    public static void writeStringToFile (String s, String filename) throws IOException {
+        BufferedWriter br = new BufferedWriter(new FileWriter(new File(filename)));
+        br.write(s);
+        br.close();
     }
 }
 

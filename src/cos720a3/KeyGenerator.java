@@ -1,8 +1,6 @@
 package cos720a3;
 
 import java.io.File;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.math.BigInteger;
 import java.util.ArrayList;
 
@@ -27,14 +25,7 @@ public class KeyGenerator {
         }
 
         int knapsackSize = Integer.parseInt(args[0]);
-        File privateKeyFile = new File(args[1]);
-        File publicKeyFile = new File(args[2]);
-
-        ////////////////////
-        // open output files
-
-        BufferedWriter privateKeyWriter = new BufferedWriter(new FileWriter (privateKeyFile));
-        BufferedWriter publicKeyWriter = new BufferedWriter(new FileWriter (publicKeyFile));
+        String privateKeyFileName = args[1], publicKeyFileName = args[2];
 
         ///////////////////////
         // generate public key
@@ -93,24 +84,8 @@ public class KeyGenerator {
 
         /////////////////////
         //write keys to files
-        for (int i = 0; i < publicKnapsack.size(); i++) {
-            publicKeyWriter.write(new Integer(publicKnapsack.get(i)).toString());
-            publicKeyWriter.write(" ");
-        }
-        publicKeyWriter.write(new Integer(q).toString());
-        publicKeyWriter.write(" ");
-        publicKeyWriter.write(new Integer(r).toString());
-        publicKeyWriter.write(" ");
-
-        for (int i = 0; i < privateKnapsack.size(); i++) {
-            privateKeyWriter.write(new Integer(privateKnapsack.get(i)).toString());
-            privateKeyWriter.write(" ");
-        }
-
-        /////////////
-        //close files
-        publicKeyWriter.close();
-        privateKeyWriter.close();
+        KeyFileIO.writePublicKeyToFilename(publicKnapsack, q, r, publicKeyFileName);
+        KeyFileIO.writePrivateKeyToFilename(privateKnapsack, privateKeyFileName);
 
     }
 

@@ -26,45 +26,10 @@ public class KeyGenerator {
         String privateKeyFileName = args[1], publicKeyFileName = args[2];
 
         ///////////////////////
-        // generate public key
+        // generate keys
 
-        PublicKey publicKey = new PublicKey();
-        PrivateKey privateKey;
-
-        //generate a superincreasing knapsack
-        double max = initialMax, publicKnapsackTotal = 0.0;
-        Integer randomNumber = (int)(Math.random()*max);
-        publicKey.knapsack.add(randomNumber);
-        for (int i = 1; i < knapsackSize; i++) {
-            publicKnapsackTotal = arrayListTotal(publicKey.knapsack);
-            while (randomNumber <= publicKnapsackTotal) {
-                max += 10;
-                randomNumber = (int)(Math.random()*max);
-            }
-            publicKey.knapsack.add(randomNumber);
-        }
-
-        //generate random q such that q > sum of knapsack
-        //double publicKnapsackTotal = 0.0;
-        for (int i = 0; i < publicKey.knapsack.size(); i++) {
-            publicKnapsackTotal += publicKey.knapsack.get(i);
-        }
-        do {
-            max += 10;
-            randomNumber = (int)(Math.random()*max);
-        } while (randomNumber <= publicKnapsackTotal);
-        publicKey.q = randomNumber;
-
-        do {
-            max += 10;
-            randomNumber = (int)(Math.random()*max);
-        } while (Util.gcd(randomNumber, publicKey.q) != 1);
-        publicKey.r = randomNumber;
-
-
-        //////////////////////
-        //generate private key
-        privateKey = publicKey.derivePrivateKey();
+        PublicKey publicKey = generatePublicKey(knapsackSize);
+        PrivateKey privateKey = publicKey.derivePrivateKey();
 
 
         /////////////////////
@@ -80,6 +45,43 @@ public class KeyGenerator {
             total += array.get(i);
         }
         return total;
+    }
+
+    static PublicKey generatePublicKey (int size) {
+        int initialMax = 50;
+        int incrementSize = 10;
+        PublicKey publicKey = new PublicKey();
+
+        //generate a superincreasing knapsack
+        double max = initialMax, publicKnapsackTotal = 0.0;
+        Integer randomNumber = (int)(Math.random()*max);
+        publicKey.knapsack.add(randomNumber);
+        for (int i = 1; i < size; i++) {
+            publicKnapsackTotal = arrayListTotal(publicKey.knapsack);
+            while (randomNumber <= publicKnapsackTotal) {
+                max += incrementSize;
+                randomNumber = (int)(Math.random()*max);
+            }
+            publicKey.knapsack.add(randomNumber);
+        }
+
+        //generate random q such that q > sum of knapsack
+        //double publicKnapsackTotal = 0.0;
+        for (int i = 0; i < publicKey.knapsack.size(); i++) {
+            publicKnapsackTotal += publicKey.knapsack.get(i);
+        }
+        do {
+            max += incrementSize;
+            randomNumber = (int)(Math.random()*max);
+        } while (randomNumber <= publicKnapsackTotal);
+        publicKey.q = randomNumber;
+
+        do {
+            max += incrementSize;
+            randomNumber = (int)(Math.random()*max);
+        } while (Util.gcd(randomNumber, publicKey.q) != 1);
+        publicKey.r = randomNumber;
+        return publicKey;
     }
 
 

@@ -21,6 +21,9 @@ public class KeyFileIO {
      * @throws IOException
      */
     public static void writePublicKeyToFilename(PublicKey k, String filename) throws IOException {
+        if (filename == null) {
+            throw new RuntimeException ("Outputfile is invalid");
+        }
         writePublicKeyToFile(k, new File (filename));
     }
 
@@ -36,6 +39,7 @@ public class KeyFileIO {
             throw new RuntimeException ("Outputfile is invalid");
         }
         if (k == null || k.getKnapsackSize() < 1 || !k.isValid()) {
+            k.clearKey();
             throw new RuntimeException ("Invalid key, won't write.");
         }
 
@@ -44,6 +48,7 @@ public class KeyFileIO {
         for (int i = 0; i < k.getKnapsackSize(); i++) {
             if (k.getFromKnapsack(i) == null) {
                 file.delete();
+                k.clearKey();
                 throw new RuntimeException ("Invalid key, won't write.");
             }
             w.write(new Integer(k.getFromKnapsack(i)).toString() + " ");
@@ -60,6 +65,9 @@ public class KeyFileIO {
      * @throws IOException
      */
     public static void writePrivateKeyToFilename(PrivateKey k, String filename) throws IOException{
+        if (filename == null) {
+            throw new RuntimeException ("Outputfile is invalid");
+        }
         writePrivateKeyToFile(k, new File (filename));
     }
 
@@ -82,6 +90,7 @@ public class KeyFileIO {
 
         for (int i = 0; i < k.getKnapsackSize(); i++) {
             if (k.getFromKnapsack(i) == null) {
+                k.clearKey();
                 file.delete();
                 throw new RuntimeException ("Invalid key, won't write.");
             }
@@ -107,15 +116,16 @@ public class KeyFileIO {
             
             String[] key = r.readLine().split(" ");
             if (key == null || key.length < 3) {
+                key = null;
                 return null;
             }
-
 
             PublicKey publicKey = new PublicKey();
             int kq = 0, kr = 0, kx = 0;
             int i;
             for (i = 0; i < key.length -2; i++) {
                 if (key[i] == null) {
+                    publicKey.clearKey();
                     return null;
                 }
                 try {
@@ -135,10 +145,14 @@ public class KeyFileIO {
             } catch (NumberFormatException e) {
                 kq = 0;
                 kr = 0;
+                publicKey.clearKey();
                 return null;
             }
             if (publicKey.isValid()) {
                 return publicKey;
+            } else {
+                publicKey.clearKey();
+                return null;
             }
         }
         return null;

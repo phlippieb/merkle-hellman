@@ -57,4 +57,11 @@ public class PrivateKey {
         sb.append(knapsack.get(knapsack.size()-1));
         return sb.toString();
     }
+
+    public void clearKey() {
+        if (this.knapsack != null) {
+            this.knapsack.clear();
+            this.knapsack = null;
+        }
+    }
 }

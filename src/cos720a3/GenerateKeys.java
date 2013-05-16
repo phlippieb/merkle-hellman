@@ -3,6 +3,7 @@ package cos720a3;
 import java.util.ArrayList;
 
 public class GenerateKeys {
+    
 
     /**
      * Generates a private and public key as text files.
@@ -13,17 +14,41 @@ public class GenerateKeys {
      * @param args the command line arguments:
      */
     public static void main(String[] args) throws Exception {
-        int initialMax = 50;
+
+        final int minimumKnapsackSize = 3;
+        final int maximumKnapsackSize = 200;
 
         //////////////////
         // check arguments
 
         if (args.length != 3) {
-            throw new IllegalArgumentException("Invalid arguments.");
+            System.out.println ("Invalid number of arguments");
+            usage();
+            return;
         }
 
-        int knapsackSize = Integer.parseInt(args[0]);
+        int knapsackSize = -1;
+        try {
+            knapsackSize = Integer.parseInt(args[0]);
+        } catch (NumberFormatException e) {
+            System.out.println("Size parameter is invalid");
+            usage();
+            return;
+        }
+
+        if (knapsackSize < minimumKnapsackSize || knapsackSize > maximumKnapsackSize) {
+            System.out.println("Size parameter is invalid. Please use a size between " + minimumKnapsackSize + " and " + maximumKnapsackSize);
+            usage();
+            return;
+        }
+
         String privateKeyFileName = args[1], publicKeyFileName = args[2];
+
+        if (!Util.isValidFile(publicKeyFileName) || !Util.isValidFile(privateKeyFileName)) {
+            System.out.println("Invalid filename(s)");
+            usage();
+            return;
+        }
 
         ///////////////////////
         // generate keys
@@ -64,33 +89,39 @@ public class GenerateKeys {
         //generate a superincreasing knapsack
         double max = initialMax, publicKnapsackTotal = 0.0;
         Integer randomNumber = (int)(Math.random()*max);
-        publicKey.knapsack.add(randomNumber);
+        publicKey.addToKnapsack(randomNumber);
+        publicKnapsackTotal += randomNumber;
         for (int i = 1; i < size; i++) {
-            publicKnapsackTotal = arrayListTotal(publicKey.knapsack);
             while (randomNumber <= publicKnapsackTotal) {
                 max += incrementSize;
                 randomNumber = (int)(Math.random()*max);
             }
-            publicKey.knapsack.add(randomNumber);
+            publicKey.addToKnapsack(randomNumber);
+            publicKnapsackTotal += randomNumber;
         }
 
         //generate random q such that q > sum of knapsack
         //double publicKnapsackTotal = 0.0;
-        for (int i = 0; i < publicKey.knapsack.size(); i++) {
-            publicKnapsackTotal += publicKey.knapsack.get(i);
-        }
+        //for (int i = 0; i < publicKey.getKnapsackSize(); i++) {
+        //    publicKnapsackTotal += publicKey.knapsack.get(i);
+        //}
         do {
             max += incrementSize;
             randomNumber = (int)(Math.random()*max);
         } while (randomNumber <= publicKnapsackTotal);
-        publicKey.q = randomNumber;
+        int q = randomNumber;
+        publicKey.setQ(q);
 
         do {
             max += incrementSize;
             randomNumber = (int)(Math.random()*max);
-        } while (Util.gcd(randomNumber, publicKey.q) != 1);
-        publicKey.r = randomNumber;
+        } while (Util.gcd(randomNumber, q) != 1);
+        publicKey.setR(randomNumber);
         return publicKey;
+    }
+
+    static void usage () {
+        System.out.println("Required arguments: <key knapsack size> <private key filename> <public key filename>");
     }
 
 

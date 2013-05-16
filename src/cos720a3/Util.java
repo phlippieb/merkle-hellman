@@ -42,13 +42,40 @@ public class Util {
     }
 
     public static String readFile (String filename) throws IOException {
-        return new Scanner(new File(filename)).useDelimiter("\\Z").next();
+        if (isValidFile(filename)) {
+            return new Scanner(new File(filename)).useDelimiter("\\Z").next();
+        }
+        return null;
     }
 
     public static void writeStringToFile (String s, String filename) throws IOException {
         BufferedWriter br = new BufferedWriter(new FileWriter(new File(filename)));
         br.write(s);
         br.close();
+    }
+
+    public static boolean isValidFile (String filename) {
+        File test = new File(filename);
+        if (test.exists() && test.canRead() && !test.isDirectory() && (test.length() > 0) && test.length() < 10000) {
+           return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static boolean isValidCreateFile (String filename) {
+        File test = new File (filename);
+        if (test.exists() && !test.isDirectory()) {
+            return true;
+        } else {
+            try {
+                test.createNewFile();
+                test.delete();
+                return true;
+            } catch (Exception e) {
+                return false;
+            }
+        }
     }
 }
 

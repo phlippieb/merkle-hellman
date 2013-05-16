@@ -32,11 +32,23 @@ public class KeyFileIO {
      * @throws IOException
      */
     public static void writePublicKeyToFile(PublicKey k, File file) throws IOException {
-        BufferedWriter w = new BufferedWriter (new FileWriter (file));
-        for (int i = 0; i < k.knapsack.size(); i++) {
-            w.write(new Integer(k.knapsack.get(i)).toString() + " ");
+        if (file == null || !Util.isValidCreateFile(file.getName())) {
+            throw new RuntimeException ("Outputfile is invalid");
         }
-        w.write(new Integer(k.q).toString() + " " + new Integer(k.r).toString());
+        if (k == null || k.getKnapsackSize() < 1 || !k.isValid()) {
+            throw new RuntimeException ("Invalid key, won't write.");
+        }
+
+        BufferedWriter w = new BufferedWriter (new FileWriter (file));
+        
+        for (int i = 0; i < k.getKnapsackSize(); i++) {
+            if (k.getFromKnapsack(i) == null) {
+                file.delete();
+                throw new RuntimeException ("Invalid key, won't write.");
+            }
+            w.write(new Integer(k.getFromKnapsack(i)).toString() + " ");
+        }
+        w.write(new Integer(k.getQ()).toString() + " " + new Integer(k.getR()).toString());
         w.close();
     }
 
@@ -58,30 +70,78 @@ public class KeyFileIO {
      * @param file A File object representing the file to write the private key to
      * @throws IOException
      */
-    public static void writePrivateKeyToFile(PrivateKey k, File file) throws IOException{
+    public static void writePrivateKeyToFile(PrivateKey k, File file) throws IOException, RuntimeException {
+        if (file == null || !Util.isValidCreateFile(file.getName())) {
+            throw new RuntimeException ("Outputfile is invalid");
+        }
+        if (k == null || k.getKnapsackSize() < 1) {
+            throw new RuntimeException ("Invalid key, won't write.");
+        }
+
         BufferedWriter w = new BufferedWriter (new FileWriter (file));
-        for (int i = 0; i < k.knapsack.size(); i++) {
-            w.write(new Integer(k.knapsack.get(i)).toString() + " ");
+
+        for (int i = 0; i < k.getKnapsackSize(); i++) {
+            if (k.getFromKnapsack(i) == null) {
+                file.delete();
+                throw new RuntimeException ("Invalid key, won't write.");
+            }
+            w.write(new Integer(k.getFromKnapsack(i)).toString() + " ");
         }
         w.close();
     }
 
     public static PublicKey readPublicKeyFromFilename(String filename) throws IOException {
-        return readPublicKeyFromFile(new File(filename));
+        if (Util.isValidFile(filename)) {
+            return readPublicKeyFromFile(new File(filename));
+        } else {
+            return null;
+        }
     }
 
     public static PublicKey readPublicKeyFromFile(File file) throws IOException {
-        BufferedReader r = new BufferedReader (new FileReader (file));
-        String[] key = r.readLine().split(" ");
-        PublicKey publicKey = new PublicKey();
-        int i;
-        for (i = 0; i < key.length -2; i++) {
-            publicKey.knapsack.add(Integer.parseInt(key[i]));
-        }
-        publicKey.q = Integer.parseInt(key[i++]);
-        publicKey.r = Integer.parseInt(key[i]);
+        if (Util.isValidFile(file.getName())) {
+            BufferedReader r = new BufferedReader (new FileReader (file));
+            if (! r.ready()) {
+                return null;
+            }
+            
+            String[] key = r.readLine().split(" ");
+            if (key == null || key.length < 3) {
+                return null;
+            }
 
-        return publicKey;
+
+            PublicKey publicKey = new PublicKey();
+            int kq = 0, kr = 0, kx = 0;
+            int i;
+            for (i = 0; i < key.length -2; i++) {
+                if (key[i] == null) {
+                    return null;
+                }
+                try {
+                    kx = Integer.parseInt(key[i]);
+                    publicKey.addToKnapsack(kx);
+                } catch (NumberFormatException e) {
+                    publicKey.clearKey();
+                    return null;
+                }
+            }
+
+            try {
+                kq = Integer.parseInt(key[i++]);
+                kr = Integer.parseInt(key[i]);
+                publicKey.setQ(kq);
+                publicKey.setR(kr);
+            } catch (NumberFormatException e) {
+                kq = 0;
+                kr = 0;
+                return null;
+            }
+            if (publicKey.isValid()) {
+                return publicKey;
+            }
+        }
+        return null;
 
     }
 
@@ -95,7 +155,7 @@ public class KeyFileIO {
         PrivateKey privateKey = new PrivateKey();
         int i;
         for (i = 0; i < key.length; i++) {
-            privateKey.knapsack.add(Integer.parseInt(key[i]));
+            privateKey.addToKnapsack(Integer.parseInt(key[i]));
         }
 
         return privateKey;

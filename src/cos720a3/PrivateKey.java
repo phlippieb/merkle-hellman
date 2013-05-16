@@ -8,20 +8,20 @@ import java.util.ArrayList;
  * @author phlippie
  */
 public class PrivateKey {
-    private ArrayList<Integer> knapsack;
+    private ArrayList<Double> knapsack;
 
     public PrivateKey() {
-        this.knapsack = new ArrayList<Integer>();
+        this.knapsack = new ArrayList<Double>();
     }
 
-    public void addToKnapsack (Integer i) {
+    public void addToKnapsack (Double i) {
         if (this.knapsack == null || i == null) {
             throw new RuntimeException ("Key is invalid");
         }
         this.knapsack.add(i);
     }
 
-    public Integer getFromKnapsack(int i) {
+    public Double getFromKnapsack(int i) {
         if (this.knapsack == null || this.knapsack.isEmpty()) {
             throw new RuntimeException ("Key is invalid");
         }
@@ -29,7 +29,7 @@ public class PrivateKey {
             throw new RuntimeException ("Index is invalid");
         }
 
-        return new Integer(this.knapsack.get(i));
+        return new Double(this.knapsack.get(i));
     }
 
     public int getKnapsackSize () {

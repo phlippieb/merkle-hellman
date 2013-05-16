@@ -4,15 +4,20 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.math.BigInteger;
 import java.util.Scanner;
 
 public class Util {
-    public static int gcd(int x, int y) {
-        BigInteger b1 = new BigInteger(Integer.toString(x));
-        BigInteger b2 = new BigInteger(Integer.toString(y));
-        BigInteger gcd = b1.gcd(b2);
-        return gcd.intValue();
+        
+    public static double gcd(double x, double y) {
+        try {
+            if (y == 0.0) {
+                return x;
+            }
+            double result = gcd(y, x%y);
+            return result;
+        } catch (StackOverflowError e) {
+            return -1.0;
+        }
     }
 
     public static String stringToBinaryString (String s) {

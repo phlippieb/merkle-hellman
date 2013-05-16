@@ -18,14 +18,14 @@ import java.util.ArrayList;
  * @author phlippie
  */
 public class PublicKey {
-    private ArrayList<Integer> knapsack;
-    private Integer q, r;
+    private ArrayList<Double> knapsack;
+    private Double q, r;
 
     /**
      * Initialise a new key with null values for q and r, and an empty knapsack.
      */
     public PublicKey () {
-        this.knapsack = new ArrayList<Integer>();
+        this.knapsack = new ArrayList<Double>();
         this.q = null;
         this.r = null;
     }
@@ -35,7 +35,7 @@ public class PublicKey {
      * @param i The integer value to add to the knapsack.
      * @throws RuntimeException If the added integer is invalid (i.e., renders the knapsack non-superincreasing), or if q or r have already been set (the method was called out of order), or if the knapsack is null, the object will clear itself and throw an exception.
      */
-    public void addToKnapsack(Integer i) throws RuntimeException {
+    public void addToKnapsack(Double i) throws RuntimeException {
         if (this.knapsack == null || this.q != null || this.r != null) {
             this.clearKey();
             throw new RuntimeException ("Key is invalid.");
@@ -54,7 +54,7 @@ public class PublicKey {
      * @param q The value for q. Must be larger than the sum of the knapsack.
      * @throws RuntimeException If q is invalid or the method was called out of order, the object will self-destruct and throw an exception.
      */
-    public void setQ (Integer q) throws RuntimeException {
+    public void setQ (Double q) throws RuntimeException {
         if (this.knapsack == null || q == null) {
             this.clearKey();
             throw new RuntimeException ("Key is invalid.");
@@ -73,7 +73,7 @@ public class PublicKey {
      * @param r The value to set r to.
      * @throws RuntimeException If r is invalid or called out of order, the object will self-destruct and throw an exception.
      */
-    public void setR (Integer r) throws RuntimeException {
+    public void setR (Double r) throws RuntimeException {
         if (this.knapsack == null || this.q == null || r == null) {
             this.clearKey();
             throw new RuntimeException ("Key is invalid.");
@@ -91,7 +91,7 @@ public class PublicKey {
      * @param index
      * @return
      */
-    public Integer getFromKnapsack (int index) {
+    public Double getFromKnapsack (int index) {
         if (this.knapsack == null || this.knapsack.isEmpty() || this.q == null || this.r == null || !this.isValid()) {
             this.clearKey();
             throw new RuntimeException ("Key is invalid.");
@@ -100,7 +100,7 @@ public class PublicKey {
             this.clearKey();
             throw new RuntimeException ("Index is invalid");
         }
-        return new Integer(this.knapsack.get(index));
+        return new Double(this.knapsack.get(index));
     }
 
     /**
@@ -108,12 +108,12 @@ public class PublicKey {
      * If the method is called out of order (before the knapsack, q, and r have all been set), or with an invalid index, the object will self-destruct.
      * @return
      */
-    public Integer getQ () {
+    public Double getQ () {
         if (this.knapsack == null || this.knapsack.isEmpty() || this.q == null || this.r == null || !this.isValid()) {
             this.clearKey();
             throw new RuntimeException ("Key is invalid.");
         }
-        return new Integer(this.q);
+        return new Double(this.q);
     }
 
     /**
@@ -121,12 +121,12 @@ public class PublicKey {
      * If the method is called out of order (before the knapsack, q, and r have all been set), or with an invalid index, the object will self-destruct.
      * @return
      */
-    public Integer getR () {
+    public Double getR () {
         if (this.knapsack == null || this.knapsack.isEmpty() || this.q == null || this.r == null || !this.isValid()) {
             this.clearKey();
             throw new RuntimeException ("Key is invalid.");
         }
-        return new Integer(this.r);
+        return new Double(this.r);
     }
 
     /**
@@ -154,7 +154,7 @@ public class PublicKey {
             return false;
         }
 
-        Integer runningTotal = knapsack.get(0);
+        Double runningTotal = knapsack.get(0);
         //test if knapsack is super-increasing - i.e., if each item is larger than the sum of each previous item
         for (int i = 1; i < knapsack.size(); i++) {
             if (knapsack.get(i) < runningTotal) {
@@ -188,7 +188,7 @@ public class PublicKey {
             return false;
         }
 
-        Integer runningTotal = -1;
+        Double runningTotal = -1.0;
         //test if knapsack is super-increasing - i.e., if each item is larger than the sum of each previous item
         for (int i = 0; i < knapsack.size(); i++) {
             if (knapsack.get(i) == null ||knapsack.get(i) < runningTotal) {
@@ -208,7 +208,7 @@ public class PublicKey {
         if (this.knapsack == null || !this.isSuperIncreasing()) {
             return false;
         }
-        Integer knapsackTotal = 0;
+        Double knapsackTotal = 0.0;
         for (int i = 0; i < this.knapsack.size(); i++) {
             if (this.knapsack.get(i) == null) {
                 return false;

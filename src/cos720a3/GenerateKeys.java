@@ -16,7 +16,7 @@ public class GenerateKeys {
     public static void main(String[] args) throws Exception {
 
         final int minimumKnapsackSize = 3;
-        final int maximumKnapsackSize = 200;
+        final int maximumKnapsackSize = 20;
 
         //////////////////
         // check arguments
@@ -44,7 +44,7 @@ public class GenerateKeys {
 
         String privateKeyFileName = args[1], publicKeyFileName = args[2];
 
-        if (!Util.isValidFile(publicKeyFileName) || !Util.isValidFile(privateKeyFileName)) {
+        if (!Util.isValidCreateFile(publicKeyFileName) || !Util.isValidCreateFile(privateKeyFileName)) {
             System.out.println("Invalid filename(s)");
             usage();
             return;
@@ -53,24 +53,36 @@ public class GenerateKeys {
         ///////////////////////
         // generate keys
 
-        PublicKey publicKey = generatePublicKey(knapsackSize);
-        System.out.println("public key:  "+publicKey);
-        PrivateKey privateKey = publicKey.derivePrivateKey();
-        System.out.println("private key: "+privateKey);
+        try {
+            PublicKey publicKey = generatePublicKey(knapsackSize);
+            if (publicKey == null) {
+                System.out.println("Error");
+                return;
+            }
+            System.out.println("public key:  "+publicKey);
+            PrivateKey privateKey = publicKey.derivePrivateKey();
+            if (privateKey == null) {
+                System.out.println("Error");
+                return;
+            }
+            System.out.println("private key: "+privateKey);
 
 
-        /////////////////////
-        //write keys to files
-        KeyFileIO.writePublicKeyToFilename(publicKey, publicKeyFileName);
-        KeyFileIO.writePrivateKeyToFilename(privateKey, privateKeyFileName);
+            /////////////////////
+            //write keys to files
+            KeyFileIO.writePublicKeyToFilename(publicKey, publicKeyFileName);
+            KeyFileIO.writePrivateKeyToFilename(privateKey, privateKeyFileName);
 
-        //////////////////
-        //test key reading
-        PublicKey testP = KeyFileIO.readPublicKeyFromFilename(publicKeyFileName);
-        System.out.println("test public key read: " + testP);
-        PrivateKey testPr = KeyFileIO.readPrivateKeyFromFilename(privateKeyFileName);
-        System.out.println("test private key read: " + testPr);
-
+            //////////////////
+            //test key reading
+            PublicKey testP = KeyFileIO.readPublicKeyFromFilename(publicKeyFileName);
+            System.out.println("test public key read: " + testP);
+            PrivateKey testPr = KeyFileIO.readPrivateKeyFromFilename(privateKeyFileName);
+            System.out.println("test private key read: " + testPr);
+        } catch (Exception e) {
+            System.out.println ("Error");
+            return;
+        }
     }
 
     static double arrayListTotal (ArrayList<Integer> array) {
@@ -83,18 +95,18 @@ public class GenerateKeys {
 
     static PublicKey generatePublicKey (int size) {
         int initialMax = 50;
-        int incrementSize = 10;
+        int incrementSize = 1;
         PublicKey publicKey = new PublicKey();
 
         //generate a superincreasing knapsack
         double max = initialMax, publicKnapsackTotal = 0.0;
-        Integer randomNumber = (int)(Math.random()*max);
+        Double randomNumber = Math.ceil(Math.random()*max);
         publicKey.addToKnapsack(randomNumber);
         publicKnapsackTotal += randomNumber;
         for (int i = 1; i < size; i++) {
             while (randomNumber <= publicKnapsackTotal) {
                 max += incrementSize;
-                randomNumber = (int)(Math.random()*max);
+                randomNumber = Math.ceil(Math.random()*max);
             }
             publicKey.addToKnapsack(randomNumber);
             publicKnapsackTotal += randomNumber;
@@ -107,15 +119,21 @@ public class GenerateKeys {
         //}
         do {
             max += incrementSize;
-            randomNumber = (int)(Math.random()*max);
+            randomNumber = Math.ceil(Math.random()*max);
         } while (randomNumber <= publicKnapsackTotal);
-        int q = randomNumber;
+        Double q = randomNumber;
         publicKey.setQ(q);
 
+        double gcd;
         do {
             max += incrementSize;
-            randomNumber = (int)(Math.random()*max);
-        } while (Util.gcd(randomNumber, q) != 1);
+            randomNumber = Math.ceil(Math.random()*max);
+            gcd = Util.gcd(randomNumber, q);
+            if (gcd == -1) {
+                System.out.println("Error.");
+                return null;
+            }
+        } while (gcd != 1);
         publicKey.setR(randomNumber);
         return publicKey;
     }

@@ -8,7 +8,7 @@ import java.util.ArrayList;
  */
 public class Encryption {
     
-    public static Integer [] encryptTextStringAsNumbers (String plaintext, PublicKey key) {
+    public static Double [] encryptTextStringAsNumbers (String plaintext, PublicKey key) {
         if (plaintext == null || plaintext.length() == 0 || key == null || key.getKnapsackSize() == 0) {
             return null;
         }
@@ -17,11 +17,11 @@ public class Encryption {
             return null;
         }
 
-        Integer [] result;
+        Double [] result;
 
         int keySize = key.getKnapsackSize();
         int numberOfPasses = bPlaintext.length() / keySize;
-        result = new Integer [numberOfPasses];
+        result = new Double [numberOfPasses];
         for (int i = 0; i < numberOfPasses; i++ ) {
             String bPlaintextSubstring = bPlaintext.substring(i*keySize,(i+1)*keySize);
             if (bPlaintextSubstring == null || bPlaintextSubstring.length() == 0) {
@@ -37,12 +37,12 @@ public class Encryption {
         return result;
     }
 
-    public static Integer encryptBlock(String binaryBlock, PublicKey key) {
+    public static Double encryptBlock(String binaryBlock, PublicKey key) {
         if (binaryBlock == null || key == null || binaryBlock.length() != key.getKnapsackSize()) {
             return null;
         }
 
-        ArrayList<Integer> C = new ArrayList<Integer>();
+        ArrayList<Double> C = new ArrayList<Double>();
         for (int i = 0; i < key.getKnapsackSize(); i++) {
             try {
                 if (key.getFromKnapsack(i) == null) {
@@ -55,7 +55,7 @@ public class Encryption {
                 return null;
             }
         }
-        Integer blockTotal = 0;
+        Double blockTotal = 0.0;
         for (int i = 0; i < C.size(); i++) {
             blockTotal += C.get(i);
         }

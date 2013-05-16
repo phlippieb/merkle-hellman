@@ -51,9 +51,9 @@ public class KeyFileIO {
                 k.clearKey();
                 throw new RuntimeException ("Invalid key, won't write.");
             }
-            w.write(new Integer(k.getFromKnapsack(i)).toString() + " ");
+            w.write(new Double(k.getFromKnapsack(i)).toString() + " ");
         }
-        w.write(new Integer(k.getQ()).toString() + " " + new Integer(k.getR()).toString());
+        w.write(new Double(k.getQ()).toString() + " " + new Double(k.getR()).toString());
         w.close();
     }
 
@@ -94,7 +94,7 @@ public class KeyFileIO {
                 file.delete();
                 throw new RuntimeException ("Invalid key, won't write.");
             }
-            w.write(new Integer(k.getFromKnapsack(i)).toString() + " ");
+            w.write(new Double(k.getFromKnapsack(i)).toString() + " ");
         }
         w.close();
     }
@@ -121,7 +121,7 @@ public class KeyFileIO {
             }
 
             PublicKey publicKey = new PublicKey();
-            int kq = 0, kr = 0, kx = 0;
+            Double kq = 0.0, kr = 0.0, kx = 0.0;
             int i;
             for (i = 0; i < key.length -2; i++) {
                 if (key[i] == null) {
@@ -129,7 +129,7 @@ public class KeyFileIO {
                     return null;
                 }
                 try {
-                    kx = Integer.parseInt(key[i]);
+                    kx = Double.parseDouble(key[i]);
                     publicKey.addToKnapsack(kx);
                 } catch (NumberFormatException e) {
                     publicKey.clearKey();
@@ -138,13 +138,13 @@ public class KeyFileIO {
             }
 
             try {
-                kq = Integer.parseInt(key[i++]);
-                kr = Integer.parseInt(key[i]);
+                kq = Double.parseDouble(key[i++]);
+                kr = Double.parseDouble(key[i]);
                 publicKey.setQ(kq);
                 publicKey.setR(kr);
             } catch (NumberFormatException e) {
-                kq = 0;
-                kr = 0;
+                kq = 0.0;
+                kr = 0.0;
                 publicKey.clearKey();
                 return null;
             }
@@ -169,7 +169,7 @@ public class KeyFileIO {
         PrivateKey privateKey = new PrivateKey();
         int i;
         for (i = 0; i < key.length; i++) {
-            privateKey.addToKnapsack(Integer.parseInt(key[i]));
+            privateKey.addToKnapsack(Double.parseDouble(key[i]));
         }
 
         return privateKey;

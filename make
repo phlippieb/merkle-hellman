@@ -1,0 +1,2 @@
+./makeEncrypt
+./makeGenerateKeys

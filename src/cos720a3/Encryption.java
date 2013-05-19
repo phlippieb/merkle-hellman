@@ -8,7 +8,7 @@ import java.util.ArrayList;
  */
 public class Encryption {
     
-    public static Double [] encryptTextStringAsNumbers (String plaintext, PrivateKey key) {
+    public static Double [] encryptTextStringAsNumbers (String plaintext, PublicKey key) {
         if (plaintext == null || plaintext.length() == 0 || key == null || key.getKnapsackSize() == 0) {
             return null;
         }
@@ -37,7 +37,7 @@ public class Encryption {
         return result;
     }
 
-    public static Double encryptBlock(String binaryBlock, PrivateKey key) {
+    public static Double encryptBlock(String binaryBlock, PublicKey key) {
         if (binaryBlock == null || key == null || binaryBlock.length() != key.getKnapsackSize()) {
             return null;
         }

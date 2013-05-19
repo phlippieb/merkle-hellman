@@ -54,18 +54,19 @@ public class GenerateKeys {
         // generate keys
 
         try {
-            PrivateKey publicKey = generatePublicKey(knapsackSize);
-            if (publicKey == null) {
-                System.out.println("Error");
-                return;
-            }
-            System.out.println("public key:  "+publicKey);
-            PublicKey privateKey = publicKey.derivePublicKey();
+            PrivateKey privateKey = generatePrivateKey(knapsackSize);
             if (privateKey == null) {
                 System.out.println("Error");
                 return;
             }
-            System.out.println("private key: "+privateKey);
+            System.out.print("private key:  "+ privateKey);
+            System.out.println(" (r="+privateKey.getR()+")");
+            PublicKey publicKey = privateKey.derivePublicKey();
+            if (privateKey == null) {
+                System.out.println("Error");
+                return;
+            }
+            System.out.println("public key: "+ publicKey);
 
 
             /////////////////////
@@ -75,10 +76,11 @@ public class GenerateKeys {
 
             //////////////////
             //test key reading
-            PrivateKey testP = KeyFileIO.readPublicKeyFromFilename(publicKeyFileName);
-            System.out.println("test public key read: " + testP);
-            PublicKey testPr = KeyFileIO.readPrivateKeyFromFilename(privateKeyFileName);
-            System.out.println("test private key read: " + testPr);
+            PrivateKey testP = KeyFileIO.readPrivateKeyFromFilename(privateKeyFileName);
+            System.out.print("test private key read: " + testP);
+            System.out.println(" (r="+privateKey.getR()+")");
+            PublicKey testPr = KeyFileIO.readPublicKeyFromFilename(publicKeyFileName);
+            System.out.println("test public key read: " + testPr);
         } catch (Exception e) {
             System.out.println ("Error");
             return;
@@ -93,7 +95,7 @@ public class GenerateKeys {
         return total;
     }
 
-    static PrivateKey generatePublicKey (int size) {
+    static PrivateKey generatePrivateKey (int size) {
         int initialMax = 50;
         int incrementSize = 1;
         PrivateKey publicKey = new PrivateKey();

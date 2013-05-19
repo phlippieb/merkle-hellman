@@ -32,8 +32,8 @@ public class Encrypt {
                 return;
             }
 
-            PrivateKey k = KeyFileIO.readPublicKeyFromFilename(publicKeyFileName);
-            if (k == null || ! k.isValid()) {
+            PublicKey k = KeyFileIO.readPublicKeyFromFilename(publicKeyFileName);
+            if (k == null) {
                 System.out.println ("Public key in file [" + publicKeyFileName + "] is invalid.");
                 usage ();
             }

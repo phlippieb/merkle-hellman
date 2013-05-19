@@ -20,11 +20,11 @@ public class KeyFileIO {
      * @param filename The path to the file to write to
      * @throws IOException
      */
-    public static void writePublicKeyToFilename(PrivateKey k, String filename) throws IOException {
+    public static void writePrivateKeyToFilename(PrivateKey k, String filename) throws IOException {
         if (filename == null) {
             throw new RuntimeException ("Outputfile is invalid");
         }
-        writePublicKeyToFile(k, new File (filename));
+        writePrivateKeyToFile(k, new File (filename));
     }
 
     /**
@@ -34,7 +34,7 @@ public class KeyFileIO {
      * @param file A file object that represents the file to write to
      * @throws IOException
      */
-    public static void writePublicKeyToFile(PrivateKey k, File file) throws IOException {
+    public static void writePrivateKeyToFile(PrivateKey k, File file) throws IOException {
         if (file == null || !Util.isValidCreateFile(file.getName())) {
             throw new RuntimeException ("Outputfile is invalid");
         }
@@ -64,11 +64,11 @@ public class KeyFileIO {
      * @param filename The path to the file to write the private key to
      * @throws IOException
      */
-    public static void writePrivateKeyToFilename(PublicKey k, String filename) throws IOException{
+    public static void writePublicKeyToFilename(PublicKey k, String filename) throws IOException{
         if (filename == null) {
             throw new RuntimeException ("Outputfile is invalid");
         }
-        writePrivateKeyToFile(k, new File (filename));
+        writePublicKeyToFile(k, new File (filename));
     }
 
     /**
@@ -78,7 +78,7 @@ public class KeyFileIO {
      * @param file A File object representing the file to write the private key to
      * @throws IOException
      */
-    public static void writePrivateKeyToFile(PublicKey k, File file) throws IOException, RuntimeException {
+    public static void writePublicKeyToFile(PublicKey k, File file) throws IOException, RuntimeException {
         if (file == null || !Util.isValidCreateFile(file.getName())) {
             throw new RuntimeException ("Outputfile is invalid");
         }
@@ -99,15 +99,15 @@ public class KeyFileIO {
         w.close();
     }
 
-    public static PrivateKey readPublicKeyFromFilename(String filename) throws IOException {
+    public static PrivateKey readPrivateKeyFromFilename(String filename) throws IOException {
         if (Util.isValidFile(filename)) {
-            return readPublicKeyFromFile(new File(filename));
+            return readPrivateKeyFromFile(new File(filename));
         } else {
             return null;
         }
     }
 
-    public static PrivateKey readPublicKeyFromFile(File file) throws IOException {
+    public static PrivateKey readPrivateKeyFromFile(File file) throws IOException {
         if (Util.isValidFile(file.getName())) {
             BufferedReader r = new BufferedReader (new FileReader (file));
             if (! r.ready()) {
@@ -159,11 +159,11 @@ public class KeyFileIO {
 
     }
 
-    public static PublicKey readPrivateKeyFromFilename(String filename) throws IOException {
-        return readPrivateKeyFromFile(new File (filename));
+    public static PublicKey readPublicKeyFromFilename(String filename) throws IOException {
+        return readPublicKeyFromFile(new File (filename));
     }
 
-    public static PublicKey readPrivateKeyFromFile(File file) throws IOException {
+    public static PublicKey readPublicKeyFromFile(File file) throws IOException {
         BufferedReader r = new BufferedReader (new FileReader (file));
         String[] key = r.readLine().split(" ");
         PublicKey privateKey = new PublicKey();

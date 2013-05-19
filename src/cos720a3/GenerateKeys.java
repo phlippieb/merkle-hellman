@@ -54,13 +54,13 @@ public class GenerateKeys {
         // generate keys
 
         try {
-            PublicKey publicKey = generatePublicKey(knapsackSize);
+            PrivateKey publicKey = generatePublicKey(knapsackSize);
             if (publicKey == null) {
                 System.out.println("Error");
                 return;
             }
             System.out.println("public key:  "+publicKey);
-            PrivateKey privateKey = publicKey.derivePrivateKey();
+            PublicKey privateKey = publicKey.derivePublicKey();
             if (privateKey == null) {
                 System.out.println("Error");
                 return;
@@ -75,9 +75,9 @@ public class GenerateKeys {
 
             //////////////////
             //test key reading
-            PublicKey testP = KeyFileIO.readPublicKeyFromFilename(publicKeyFileName);
+            PrivateKey testP = KeyFileIO.readPublicKeyFromFilename(publicKeyFileName);
             System.out.println("test public key read: " + testP);
-            PrivateKey testPr = KeyFileIO.readPrivateKeyFromFilename(privateKeyFileName);
+            PublicKey testPr = KeyFileIO.readPrivateKeyFromFilename(privateKeyFileName);
             System.out.println("test private key read: " + testPr);
         } catch (Exception e) {
             System.out.println ("Error");
@@ -93,10 +93,10 @@ public class GenerateKeys {
         return total;
     }
 
-    static PublicKey generatePublicKey (int size) {
+    static PrivateKey generatePublicKey (int size) {
         int initialMax = 50;
         int incrementSize = 1;
-        PublicKey publicKey = new PublicKey();
+        PrivateKey publicKey = new PrivateKey();
 
         //generate a superincreasing knapsack
         double max = initialMax, publicKnapsackTotal = 0.0;

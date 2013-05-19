@@ -15,34 +15,18 @@ public class GenerateKeys {
      */
     public static void main(String[] args) throws Exception {
 
-        final int minimumKnapsackSize = 3;
-        final int maximumKnapsackSize = 20;
-
         //////////////////
         // check arguments
 
-        if (args.length != 3) {
+        if (args.length != 2) {
             System.out.println ("Invalid number of arguments");
             usage();
             return;
         }
 
-        int knapsackSize = -1;
-        try {
-            knapsackSize = Integer.parseInt(args[0]);
-        } catch (NumberFormatException e) {
-            System.out.println("Size parameter is invalid");
-            usage();
-            return;
-        }
+        int knapsackSize = 16;
 
-        if (knapsackSize < minimumKnapsackSize || knapsackSize > maximumKnapsackSize) {
-            System.out.println("Size parameter is invalid. Please use a size between " + minimumKnapsackSize + " and " + maximumKnapsackSize);
-            usage();
-            return;
-        }
-
-        String privateKeyFileName = args[1], publicKeyFileName = args[2];
+        String privateKeyFileName = args[0], publicKeyFileName = args[1];
 
         if (!Util.isValidCreateFile(publicKeyFileName) || !Util.isValidCreateFile(privateKeyFileName)) {
             System.out.println("Invalid filename(s)");
@@ -141,7 +125,7 @@ public class GenerateKeys {
     }
 
     static void usage () {
-        System.out.println("Required arguments: <key knapsack size> <private key filename> <public key filename>");
+        System.out.println("Required arguments: <private key filename> <public key filename>");
     }
 
 

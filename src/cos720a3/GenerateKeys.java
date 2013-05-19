@@ -98,19 +98,21 @@ public class GenerateKeys {
             publicKnapsackTotal += randomNumber;
         }
 
-        //generate random q such that q > sum of knapsack
+        //generate random q such that q > sum of knapsack and q < 2^129 (per spec)
         //double publicKnapsackTotal = 0.0;
         //for (int i = 0; i < publicKey.getKnapsackSize(); i++) {
         //    publicKnapsackTotal += publicKey.knapsack.get(i);
         //}
+        double tmpMax = max;
+        max = Math.pow(2.0, 129.0);
         do {
-            max += incrementSize;
             randomNumber = Math.ceil(Math.random()*max);
         } while (randomNumber <= publicKnapsackTotal);
         Double q = randomNumber;
         publicKey.setQ(q);
 
         double gcd;
+        max = tmpMax;
         do {
             max += incrementSize;
             randomNumber = Math.ceil(Math.random()*max);

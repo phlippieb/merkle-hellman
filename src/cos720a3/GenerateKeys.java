@@ -77,20 +77,22 @@ public class GenerateKeys {
     static PrivateKey generatePrivateKey (int size) {
         BigInteger initialMax = BigInteger.valueOf(1000);
         BigInteger incrementSize = BigInteger.valueOf(1000);
-        PrivateKey publicKey = new PrivateKey();
+        PrivateKey privateKey = new PrivateKey();
 
         //generate a superincreasing knapsack
         BigInteger max = new BigInteger(initialMax.toString()), publicKnapsackTotal = BigInteger.valueOf(0);
         BigInteger randomNumber = randomBigIntLessThan(max);
-        publicKey.addToKnapsack(randomNumber);
+        privateKey.addToKnapsack(randomNumber);
         publicKnapsackTotal = publicKnapsackTotal.add(randomNumber);
+        BigInteger lastElement = randomNumber;
         for (int i = 1; i < size; i++) {
             while (randomNumber.compareTo(publicKnapsackTotal) <= 0) {
                 max = max.add(incrementSize);
                 randomNumber = randomBigIntLessThan(max);
             }
-            publicKey.addToKnapsack(randomNumber);
+            privateKey.addToKnapsack(randomNumber);
             publicKnapsackTotal = publicKnapsackTotal.add(randomNumber);
+            lastElement = randomNumber;
         }
 
         //generate random q such that q > sum of knapsack and q < 2^129 (per spec)
@@ -99,7 +101,7 @@ public class GenerateKeys {
             randomNumber = randomBigIntLessThan(max);
         } while (randomNumber.compareTo(publicKnapsackTotal) <= 0);
         BigInteger q = randomNumber;
-        publicKey.setQ(q);
+        privateKey.setQ(q);
 
         //generate random r such that q > sum of knapsack and r < 2^129
         BigInteger gcd;
@@ -111,9 +113,9 @@ public class GenerateKeys {
                 System.out.println("Error.");
                 return null;
             }
-        } while (randomNumber.compareTo(publicKnapsackTotal) <= 0 || gcd.compareTo(BigInteger.valueOf(1)) != 0);
-        publicKey.setR(randomNumber);
-        return publicKey;
+        } while (randomNumber.compareTo(publicKnapsackTotal) <= 0 || gcd.compareTo(BigInteger.valueOf(1)) != 0 || randomNumber.multiply(lastElement).compareTo(q) == -1);
+        privateKey.setR(randomNumber);
+        return privateKey;
     }
 
     static void usage () {

@@ -81,7 +81,7 @@ public class GenerateKeys {
 
     static PrivateKey generatePrivateKey (int size) {
         int initialMax = 50;
-        int incrementSize = 1;
+        int incrementSize = 1000;
         PrivateKey publicKey = new PrivateKey();
 
         //generate a superincreasing knapsack

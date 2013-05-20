@@ -248,7 +248,7 @@ public class PrivateKey {
 
         PublicKey privateKey = new PublicKey();
         for (int i = 0; i < knapsack.size(); i++) {
-            privateKey.addToKnapsack(r.multiply(knapsack.get(i).mod(q)));
+            privateKey.addToKnapsack(r.multiply(knapsack.get(i)).mod(q));
         }
 
         return privateKey;

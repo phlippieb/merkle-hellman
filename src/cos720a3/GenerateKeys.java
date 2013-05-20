@@ -60,13 +60,6 @@ public class GenerateKeys {
             KeyFileIO.writePublicKeyToFilename(publicKey, publicKeyFileName);
             KeyFileIO.writePrivateKeyToFilename(privateKey, privateKeyFileName);
 
-            //////////////////
-            //test key reading
-            PrivateKey testP = KeyFileIO.readPrivateKeyFromFilename(privateKeyFileName);
-            System.out.print("test private key read: " + testP);
-            System.out.println(" (r="+privateKey.getR()+")");
-            PublicKey testPr = KeyFileIO.readPublicKeyFromFilename(publicKeyFileName);
-            System.out.println("test public key read: " + testPr);
         } catch (Exception e) {
             System.out.println ("Error");
             return;
@@ -101,11 +94,6 @@ public class GenerateKeys {
         }
 
         //generate random q such that q > sum of knapsack and q < 2^129 (per spec)
-        //double publicKnapsackTotal = 0.0;
-        //for (int i = 0; i < publicKey.getKnapsackSize(); i++) {
-        //    publicKnapsackTotal += publicKey.knapsack.get(i);
-        //}
-        BigInteger tmpMax = max;
         max = BigInteger.valueOf((long)Math.pow(2.0, 129.0));
         do {
             randomNumber = randomBigIntLessThan(max);
@@ -113,8 +101,8 @@ public class GenerateKeys {
         BigInteger q = randomNumber;
         publicKey.setQ(q);
 
+        //generate random r such that q > sum of knapsack and r < 2^129
         BigInteger gcd;
-        max = tmpMax;
         do {
             max = max.add(incrementSize);
             randomNumber = randomBigIntLessThan(max);
@@ -123,7 +111,7 @@ public class GenerateKeys {
                 System.out.println("Error.");
                 return null;
             }
-        } while (gcd.compareTo(BigInteger.valueOf(1)) != 0);
+        } while (randomNumber.compareTo(publicKnapsackTotal) <= 0 || gcd.compareTo(BigInteger.valueOf(1)) != 0);
         publicKey.setR(randomNumber);
         return publicKey;
     }

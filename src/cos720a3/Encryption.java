@@ -1,5 +1,6 @@
 package cos720a3;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 
 /**
@@ -8,7 +9,7 @@ import java.util.ArrayList;
  */
 public class Encryption {
     
-    public static Double [] encryptTextStringAsNumbers (String plaintext, PublicKey key) {
+    public static BigInteger [] encryptTextStringAsNumbers (String plaintext, PublicKey key) {
         if (plaintext == null || plaintext.length() == 0 || key == null || key.getKnapsackSize() == 0) {
             return null;
         }
@@ -17,13 +18,13 @@ public class Encryption {
             return null;
         }
 
-        Double [] result;
+        BigInteger [] result;
 
         int keySize = key.getKnapsackSize();
-        int numberOfPasses = bPlaintext.length() / keySize;
-        result = new Double [numberOfPasses];
+        int numberOfPasses = (int)Math.ceil((double)(bPlaintext.length())/(double)keySize);
+        result = new BigInteger [numberOfPasses];
         for (int i = 0; i < numberOfPasses; i++ ) {
-            String bPlaintextSubstring = bPlaintext.substring(i*keySize,(i+1)*keySize);
+            String bPlaintextSubstring = bPlaintext.substring(i*keySize, Math.min((i+1)*keySize,bPlaintext.length()));
             if (bPlaintextSubstring == null || bPlaintextSubstring.length() == 0) {
                 return null;
             }
@@ -37,13 +38,13 @@ public class Encryption {
         return result;
     }
 
-    public static Double encryptBlock(String binaryBlock, PublicKey key) {
-        if (binaryBlock == null || key == null || binaryBlock.length() != key.getKnapsackSize()) {
+    public static BigInteger encryptBlock(String binaryBlock, PublicKey key) {
+        if (binaryBlock == null || key == null || binaryBlock.length() > key.getKnapsackSize()) {
             return null;
         }
 
-        ArrayList<Double> C = new ArrayList<Double>();
-        for (int i = 0; i < key.getKnapsackSize(); i++) {
+        ArrayList<BigInteger> C = new ArrayList<BigInteger>();
+        for (int i = 0; i < binaryBlock.length(); i++) {
             try {
                 if (key.getFromKnapsack(i) == null) {
                     return null;
@@ -55,9 +56,9 @@ public class Encryption {
                 return null;
             }
         }
-        Double blockTotal = 0.0;
+        BigInteger blockTotal = BigInteger.valueOf(0);
         for (int i = 0; i < C.size(); i++) {
-            blockTotal += C.get(i);
+            blockTotal = blockTotal.add(C.get(i));
         }
         return blockTotal;
     }

@@ -1,5 +1,7 @@
 package cos720a3;
 
+import java.math.BigInteger;
+
 /**
  * Encrypts data using Merkle-Hellman.
  * Command-line arguments are:
@@ -38,14 +40,14 @@ public class Encrypt {
                 usage ();
             }
 
-            Double [] cipher = Encryption.encryptTextStringAsNumbers(plaintext, k);
+            BigInteger [] cipher = Encryption.encryptTextStringAsNumbers(plaintext, k);
             if (cipher == null || cipher.length == 0) {
                 System.out.println ("Something went wrong during encryption.");
                 return;
             }
 
             StringBuilder sb = new StringBuilder ();
-            for (Double i : cipher) {
+            for (BigInteger i : cipher) {
                 if (i == null) {
                     System.out.println ("Something went wrong during encryption.");
                     return;

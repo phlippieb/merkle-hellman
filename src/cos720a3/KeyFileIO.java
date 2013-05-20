@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.math.BigInteger;
 
 /**
  * Reads and writes keys. Deals with q and r being at the end of a file
@@ -51,9 +52,9 @@ public class KeyFileIO {
                 k.clearKey();
                 throw new RuntimeException ("Invalid key, won't write.");
             }
-            w.write(new Double(k.getFromKnapsack(i)).toString() + " ");
+            w.write(new BigInteger(k.getFromKnapsack(i).toString()).toString() + " ");
         }
-        w.write(new Double(k.getQ()).toString() + " " + new Double(k.getR()).toString());
+        w.write(new BigInteger(k.getQ().toString()).toString() + " " + new BigInteger(k.getR().toString()).toString());
         w.close();
     }
 
@@ -94,7 +95,7 @@ public class KeyFileIO {
                 file.delete();
                 throw new RuntimeException ("Invalid key, won't write.");
             }
-            w.write(new Double(k.getFromKnapsack(i)).toString() + " ");
+            w.write(new BigInteger(k.getFromKnapsack(i).toString()).toString() + " ");
         }
         w.close();
     }
@@ -121,7 +122,7 @@ public class KeyFileIO {
             }
 
             PrivateKey publicKey = new PrivateKey();
-            Double kq = 0.0, kr = 0.0, kx = 0.0;
+            BigInteger kq = new BigInteger("0"), kr = new BigInteger("0"), kx = new BigInteger("0");
             int i;
             for (i = 0; i < key.length -2; i++) {
                 if (key[i] == null) {
@@ -129,7 +130,7 @@ public class KeyFileIO {
                     return null;
                 }
                 try {
-                    kx = Double.parseDouble(key[i]);
+                    kx = new BigInteger(key[i]);
                     publicKey.addToKnapsack(kx);
                 } catch (NumberFormatException e) {
                     publicKey.clearKey();
@@ -138,13 +139,13 @@ public class KeyFileIO {
             }
 
             try {
-                kq = Double.parseDouble(key[i++]);
-                kr = Double.parseDouble(key[i]);
+                kq = new BigInteger(key[i++]);
+                kr = new BigInteger(key[i]);
                 publicKey.setQ(kq);
                 publicKey.setR(kr);
             } catch (NumberFormatException e) {
-                kq = 0.0;
-                kr = 0.0;
+                kq = BigInteger.valueOf(0);
+                kr = BigInteger.valueOf(0);
                 publicKey.clearKey();
                 return null;
             }
@@ -169,7 +170,7 @@ public class KeyFileIO {
         PublicKey privateKey = new PublicKey();
         int i;
         for (i = 0; i < key.length; i++) {
-            privateKey.addToKnapsack(Double.parseDouble(key[i]));
+            privateKey.addToKnapsack(new BigInteger(key[i]));
         }
 
         return privateKey;

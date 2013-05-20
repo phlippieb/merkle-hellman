@@ -1,6 +1,8 @@
 package cos720a3;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class GenerateKeys {
     
@@ -80,22 +82,22 @@ public class GenerateKeys {
     }
 
     static PrivateKey generatePrivateKey (int size) {
-        int initialMax = 50;
-        int incrementSize = 1000;
+        BigInteger initialMax = BigInteger.valueOf(1000);
+        BigInteger incrementSize = BigInteger.valueOf(1000);
         PrivateKey publicKey = new PrivateKey();
 
         //generate a superincreasing knapsack
-        double max = initialMax, publicKnapsackTotal = 0.0;
-        Double randomNumber = Math.ceil(Math.random()*max);
+        BigInteger max = new BigInteger(initialMax.toString()), publicKnapsackTotal = BigInteger.valueOf(0);
+        BigInteger randomNumber = randomBigIntLessThan(max);
         publicKey.addToKnapsack(randomNumber);
-        publicKnapsackTotal += randomNumber;
+        publicKnapsackTotal = publicKnapsackTotal.add(randomNumber);
         for (int i = 1; i < size; i++) {
-            while (randomNumber <= publicKnapsackTotal) {
-                max += incrementSize;
-                randomNumber = Math.ceil(Math.random()*max);
+            while (randomNumber.compareTo(publicKnapsackTotal) <= 0) {
+                max = max.add(incrementSize);
+                randomNumber = randomBigIntLessThan(max);
             }
             publicKey.addToKnapsack(randomNumber);
-            publicKnapsackTotal += randomNumber;
+            publicKnapsackTotal = publicKnapsackTotal.add(randomNumber);
         }
 
         //generate random q such that q > sum of knapsack and q < 2^129 (per spec)
@@ -103,31 +105,40 @@ public class GenerateKeys {
         //for (int i = 0; i < publicKey.getKnapsackSize(); i++) {
         //    publicKnapsackTotal += publicKey.knapsack.get(i);
         //}
-        double tmpMax = max;
-        max = Math.pow(2.0, 129.0);
+        BigInteger tmpMax = max;
+        max = BigInteger.valueOf((long)Math.pow(2.0, 129.0));
         do {
-            randomNumber = Math.ceil(Math.random()*max);
-        } while (randomNumber <= publicKnapsackTotal);
-        Double q = randomNumber;
+            randomNumber = randomBigIntLessThan(max);
+        } while (randomNumber.compareTo(publicKnapsackTotal) <= 0);
+        BigInteger q = randomNumber;
         publicKey.setQ(q);
 
-        double gcd;
+        BigInteger gcd;
         max = tmpMax;
         do {
-            max += incrementSize;
-            randomNumber = Math.ceil(Math.random()*max);
-            gcd = Util.gcd(randomNumber, q);
-            if (gcd == -1) {
+            max = max.add(incrementSize);
+            randomNumber = randomBigIntLessThan(max);
+            gcd = randomNumber.gcd(q);
+            if (gcd.compareTo(BigInteger.valueOf(-1)) == 0) {
                 System.out.println("Error.");
                 return null;
             }
-        } while (gcd != 1);
+        } while (gcd.compareTo(BigInteger.valueOf(1)) != 0);
         publicKey.setR(randomNumber);
         return publicKey;
     }
 
     static void usage () {
         System.out.println("Required arguments: <private key filename> <public key filename>");
+    }
+
+    static BigInteger randomBigIntLessThan(BigInteger max) {
+        BigInteger r;
+        Random rnd = new Random();
+        do {
+            r = new BigInteger(max.bitLength(), rnd);
+        } while (r.compareTo(max) >= 0);
+        return r;
     }
 
 

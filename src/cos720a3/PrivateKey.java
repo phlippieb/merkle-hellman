@@ -1,5 +1,6 @@
 package cos720a3;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 
 /**
@@ -18,14 +19,14 @@ import java.util.ArrayList;
  * @author phlippie
  */
 public class PrivateKey {
-    private ArrayList<Double> knapsack;
-    private Double q, r;
+    private ArrayList<BigInteger> knapsack;
+    private BigInteger q, r;
 
     /**
      * Initialise a new key with null values for q and r, and an empty knapsack.
      */
     public PrivateKey () {
-        this.knapsack = new ArrayList<Double>();
+        this.knapsack = new ArrayList<BigInteger>();
         this.q = null;
         this.r = null;
     }
@@ -35,7 +36,7 @@ public class PrivateKey {
      * @param i The integer value to add to the knapsack.
      * @throws RuntimeException If the added integer is invalid (i.e., renders the knapsack non-superincreasing), or if q or r have already been set (the method was called out of order), or if the knapsack is null, the object will clear itself and throw an exception.
      */
-    public void addToKnapsack(Double i) throws RuntimeException {
+    public void addToKnapsack(BigInteger i) throws RuntimeException {
         if (this.knapsack == null || this.q != null || this.r != null) {
             this.clearKey();
             throw new RuntimeException ("Key is invalid.");
@@ -54,7 +55,7 @@ public class PrivateKey {
      * @param q The value for q. Must be larger than the sum of the knapsack.
      * @throws RuntimeException If q is invalid or the method was called out of order, the object will self-destruct and throw an exception.
      */
-    public void setQ (Double q) throws RuntimeException {
+    public void setQ (BigInteger q) throws RuntimeException {
         if (this.knapsack == null || q == null) {
             this.clearKey();
             throw new RuntimeException ("Key is invalid.");
@@ -73,7 +74,7 @@ public class PrivateKey {
      * @param r The value to set r to.
      * @throws RuntimeException If r is invalid or called out of order, the object will self-destruct and throw an exception.
      */
-    public void setR (Double r) throws RuntimeException {
+    public void setR (BigInteger r) throws RuntimeException {
         if (this.knapsack == null || this.q == null || r == null) {
             this.clearKey();
             throw new RuntimeException ("Key is invalid.");
@@ -91,7 +92,7 @@ public class PrivateKey {
      * @param index
      * @return
      */
-    public Double getFromKnapsack (int index) {
+    public BigInteger getFromKnapsack (int index) {
         if (this.knapsack == null || this.knapsack.isEmpty() || this.q == null || this.r == null || !this.isValid()) {
             this.clearKey();
             throw new RuntimeException ("Key is invalid.");
@@ -100,7 +101,7 @@ public class PrivateKey {
             this.clearKey();
             throw new RuntimeException ("Index is invalid");
         }
-        return new Double(this.knapsack.get(index));
+        return new BigInteger(this.knapsack.get(index).toString());
     }
 
     /**
@@ -108,12 +109,12 @@ public class PrivateKey {
      * If the method is called out of order (before the knapsack, q, and r have all been set), or with an invalid index, the object will self-destruct.
      * @return
      */
-    public Double getQ () {
+    public BigInteger getQ () {
         if (this.knapsack == null || this.knapsack.isEmpty() || this.q == null || this.r == null || !this.isValid()) {
             this.clearKey();
             throw new RuntimeException ("Key is invalid.");
         }
-        return new Double(this.q);
+        return new BigInteger(this.q.toString());
     }
 
     /**
@@ -121,12 +122,12 @@ public class PrivateKey {
      * If the method is called out of order (before the knapsack, q, and r have all been set), or with an invalid index, the object will self-destruct.
      * @return
      */
-    public Double getR () {
+    public BigInteger getR () {
         if (this.knapsack == null || this.knapsack.isEmpty() || this.q == null || this.r == null || !this.isValid()) {
             this.clearKey();
             throw new RuntimeException ("Key is invalid.");
         }
-        return new Double(this.r);
+        return new BigInteger(this.r.toString());
     }
 
     /**
@@ -154,22 +155,22 @@ public class PrivateKey {
             return false;
         }
 
-        Double runningTotal = knapsack.get(0);
+        BigInteger runningTotal = knapsack.get(0);
         //test if knapsack is super-increasing - i.e., if each item is larger than the sum of each previous item
         for (int i = 1; i < knapsack.size(); i++) {
-            if (knapsack.get(i) < runningTotal) {
+            if (knapsack.get(i).compareTo(runningTotal) == -1) {
                 return false;
             }
-            runningTotal += knapsack.get(i);
+            runningTotal = runningTotal.add(knapsack.get(i));
         }
 
         //test if q is larger than the total sum of the knapsack
-        if (q < runningTotal) {
+        if (q.compareTo(runningTotal) == -1) {
             return false;
         }
 
         //test if r and q are co-prime
-        if (Util.gcd(q, r) != 1) {
+        if (q.gcd(r).compareTo(new BigInteger("1")) != 0) {
             return false;
         }
 
@@ -188,13 +189,13 @@ public class PrivateKey {
             return false;
         }
 
-        Double runningTotal = -1.0;
+        BigInteger runningTotal = new BigInteger("0");
         //test if knapsack is super-increasing - i.e., if each item is larger than the sum of each previous item
         for (int i = 0; i < knapsack.size(); i++) {
-            if (knapsack.get(i) == null ||knapsack.get(i) < runningTotal) {
+            if (knapsack.get(i) == null || knapsack.get(i).compareTo(runningTotal) == -1) {
                 return false;
             }
-            runningTotal += knapsack.get(i);
+            runningTotal = runningTotal.add(knapsack.get(i));
         }
         return true;
     }
@@ -208,14 +209,14 @@ public class PrivateKey {
         if (this.knapsack == null || !this.isSuperIncreasing()) {
             return false;
         }
-        Double knapsackTotal = 0.0;
+        BigInteger knapsackTotal = new BigInteger("0");
         for (int i = 0; i < this.knapsack.size(); i++) {
             if (this.knapsack.get(i) == null) {
                 return false;
             }
-            knapsackTotal += this.knapsack.get(i);
+            knapsackTotal = knapsackTotal.add(this.knapsack.get(i));
         }
-        return q > knapsackTotal;
+        return q.compareTo(knapsackTotal) == 1;
     }
 
     /**
@@ -227,7 +228,7 @@ public class PrivateKey {
         if (this.r == null || this.q == null || !this.qIsValid()) {
             return false;
         }
-        return Util.gcd(this.q, this.r) == 1;
+        return this.q.gcd(this.r).compareTo(new BigInteger("1")) == 0;
     }
 
     /**
@@ -247,7 +248,7 @@ public class PrivateKey {
 
         PublicKey privateKey = new PublicKey();
         for (int i = 0; i < knapsack.size(); i++) {
-            privateKey.addToKnapsack(r * knapsack.get(i) % q);
+            privateKey.addToKnapsack(r.multiply(knapsack.get(i).mod(q)));
         }
 
         return privateKey;

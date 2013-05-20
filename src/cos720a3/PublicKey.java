@@ -1,5 +1,6 @@
 package cos720a3;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 
 /**
@@ -8,20 +9,20 @@ import java.util.ArrayList;
  * @author phlippie
  */
 public class PublicKey {
-    private ArrayList<Double> knapsack;
+    private ArrayList<BigInteger> knapsack;
 
     public PublicKey() {
-        this.knapsack = new ArrayList<Double>();
+        this.knapsack = new ArrayList<BigInteger>();
     }
 
-    public void addToKnapsack (Double i) {
+    public void addToKnapsack (BigInteger i) {
         if (this.knapsack == null || i == null) {
             throw new RuntimeException ("Key is invalid");
         }
         this.knapsack.add(i);
     }
 
-    public Double getFromKnapsack(int i) {
+    public BigInteger getFromKnapsack(int i) {
         if (this.knapsack == null || this.knapsack.isEmpty()) {
             throw new RuntimeException ("Key is invalid");
         }
@@ -29,7 +30,7 @@ public class PublicKey {
             throw new RuntimeException ("Index is invalid");
         }
 
-        return new Double(this.knapsack.get(i));
+        return new BigInteger(this.knapsack.get(i).toString());
     }
 
     public int getKnapsackSize () {

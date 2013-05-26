@@ -40,7 +40,8 @@ public class GenerateKeys {
         // generate keys
 
         try {
-            PrivateKey privateKey = generatePrivateKey(knapsackSize);
+            //PrivateKey privateKey = generatePrivateKey(knapsackSize);
+            PrivateKey privateKey = KeyFileIO.readPrivateKeyFromFilename(privateKeyFileName);
             if (privateKey == null) {
                 System.out.println("Error");
                 return;

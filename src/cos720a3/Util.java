@@ -31,9 +31,9 @@ public class Util {
     }
 
     public static String binaryStringToString (String s) {
-        String [] bytes = new String[s.length()/7];
+        String [] bytes = (s.length() % 7 == 0) ? new String[s.length()/7] : new String[s.length()/7+1];
         for (int i = 0; i < s.length(); i+=7) {
-            bytes[i/7] = s.substring(i, i+7);
+            bytes[i/7] = s.substring(i, Math.min(i+7,s.length()-1));
         }
         int [] charCodes = new int[bytes.length];
         for (int i = 0; i < bytes.length; i++) {

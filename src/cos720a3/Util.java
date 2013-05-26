@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class Util {
-        
+
     public static double gcd(double x, double y) {
         try {
             if (y == 0.0) {
@@ -25,15 +25,19 @@ public class Util {
         StringBuilder sb = new StringBuilder();
         for (char c:cArray) {
             String cBinaryString = Integer.toBinaryString((int)c);
+            while (cBinaryString.length() < 8) {
+                cBinaryString = "0" + cBinaryString;
+            }
+            System.out.println("binary" + cBinaryString);
             sb.append(cBinaryString);
         }
         return sb.toString();
     }
 
     public static String binaryStringToString (String s) {
-        String [] bytes = (s.length() % 7 == 0) ? new String[s.length()/7] : new String[s.length()/7+1];
+        String [] bytes = new String[s.length()/7];
         for (int i = 0; i < s.length(); i+=7) {
-            bytes[i/7] = s.substring(i, Math.min(i+7,s.length()-1));
+            bytes[i/7] = s.substring(i, i+7);
         }
         int [] charCodes = new int[bytes.length];
         for (int i = 0; i < bytes.length; i++) {
@@ -45,6 +49,7 @@ public class Util {
         }
         return sb.toString();
     }
+
 
     public static String readFile (String filename) throws IOException {
         if (isValidFile(filename)) {
@@ -58,6 +63,24 @@ public class Util {
         br.write(s);
         br.close();
     }
+
+        public static void appendwriteStringToFile (String s, String filename) throws IOException {
+
+       /* BufferedWriter br = new BufferedWriter(new FileWriter(filename,true));
+        br.write(s);
+        br.close();*/
+
+        FileWriter fileWriter = new FileWriter(filename,true);
+
+        //Use BufferedWriter instead of FileWriter for better performance
+        BufferedWriter bufferFileWriter  = new BufferedWriter(fileWriter);
+        fileWriter.append(s);
+
+        //Don't forget to close Streams or Reader to free FileDescriptor associated with it
+        bufferFileWriter.close();
+
+
+   }
 
     public static boolean isValidFile (String filename) {
         File test = new File(filename);
@@ -82,5 +105,14 @@ public class Util {
             }
         }
     }
+    static char binaryToChar(String binStr){
+                char[] temp = binStr.toCharArray();
+        int sum = 0;
+        for (int i = 0; i < temp.length; i++) {
+            sum += (Integer.parseInt(Character.toString(temp[i])) << (temp.length - i - 1));
+        }
+
+        return (char) sum;
+        }
 }
 

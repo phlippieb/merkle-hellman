@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class GenerateKeys {
-    
+
 
     /**
      * Generates a private and public key as text files.
@@ -40,8 +40,7 @@ public class GenerateKeys {
         // generate keys
 
         try {
-            //PrivateKey privateKey = generatePrivateKey(knapsackSize);
-            PrivateKey privateKey = KeyFileIO.readPrivateKeyFromFilename(privateKeyFileName);
+            PrivateKey privateKey = generatePrivateKey(knapsackSize);
             if (privateKey == null) {
                 System.out.println("Error");
                 return;

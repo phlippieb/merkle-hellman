@@ -28,7 +28,6 @@ public class Util {
             while (cBinaryString.length() < 8) {
                 cBinaryString = "0" + cBinaryString;
             }
-            System.out.println("binary" + cBinaryString);
             sb.append(cBinaryString);
         }
         return sb.toString();

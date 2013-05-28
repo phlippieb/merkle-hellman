@@ -1,4 +1,4 @@
 ant clean -q
 ant jar -Dconfig=Encrypt -q
-cp dist/COS720A3.jar ./Encrypt.jar 
+cp dist/COS720A3.jar ./encrypt.jar 
 

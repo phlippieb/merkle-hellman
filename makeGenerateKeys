@@ -1,4 +1,4 @@
 ant clean -q
 ant jar -Dconfig=GenerateKeys -q
-cp dist/COS720A3.jar ./GenerateKeys.jar 
+cp dist/COS720A3.jar ./generateKeys.jar 
 

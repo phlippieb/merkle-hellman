@@ -45,14 +45,14 @@ public class GenerateKeys {
                 System.out.println("Error");
                 return;
             }
-            System.out.print("private key:  "+ privateKey);
-            System.out.println(" (r="+privateKey.getR()+")");
+            //System.out.print("private key:  "+ privateKey);
+            //System.out.println(" (r="+privateKey.getR()+")");
             PublicKey publicKey = privateKey.derivePublicKey();
             if (privateKey == null) {
                 System.out.println("Error");
                 return;
             }
-            System.out.println("public key: "+ publicKey);
+            //System.out.println("public key: "+ publicKey);
 
 
             /////////////////////

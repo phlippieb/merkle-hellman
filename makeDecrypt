@@ -1,0 +1,4 @@
+ant clean -q
+ant jar -Dconfig=Decrypt -q
+cp dist/COS720A3.jar ./decrypt.jar 
+

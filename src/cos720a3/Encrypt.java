@@ -55,7 +55,7 @@ public class Encrypt {
                 sb.append(i.toString() + " ");
             }
             String cipherText = sb.toString();
-            System.out.println("Encrypted value(s): ["+cipherText+"]");
+            //System.out.println("Encrypted value(s): ["+cipherText+"]");
             Util.writeStringToFile(cipherText, ciphertextFileName);
         } catch (Exception e) {
             System.out.println("Error");
